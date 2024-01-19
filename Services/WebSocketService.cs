@@ -76,11 +76,14 @@ namespace src.Services
             if (_players.All(x => x.Roll == roll))
             {
                 await Broadcast($"It's a tie with a roll of {roll}");
+                _players.ForEach(x => x.Roll = null);
+                return;
             }
             var player = _players.FirstOrDefault(x => x.Roll == roll);
             await BroadCastSpecificConnection($"GJ {player.Name}, you WON with a roll of {player.Roll}", player.Socket);
             await Broadcast($"{player.Name} won with a roll of {player.Roll}");
             _players.ForEach(x => x.Roll = null);
+            return;
         }
 
         private async Task ReceiveMessage(WebSocket socket, Action<WebSocketReceiveResult, byte[]> handleMessage)
